@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISubject.cs" />
     <Compile Include="NumericRectangleControl.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -53,7 +54,6 @@
       <DependentUpon>NumericRectangleControl.cs</DependentUpon>
     </Compile>
     <Compile Include="IObserver.cs" />
-    <Compile Include="Rectangle.cs" />
     <Compile Include="RectangleSelector.cs">
       <SubType>Form</SubType>
     </Compile>

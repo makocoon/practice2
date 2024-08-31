@@ -93,6 +93,7 @@
             this._topNumericUpDown.Name = "_topNumericUpDown";
             this._topNumericUpDown.Size = new System.Drawing.Size(120, 22);
             this._topNumericUpDown.TabIndex = 4;
+            this._topNumericUpDown.ValueChanged += new System.EventHandler(this.NumericUpDownValueChanged);
             // 
             // _downNumericUpDown
             // 
@@ -105,6 +106,7 @@
             this._downNumericUpDown.Name = "_downNumericUpDown";
             this._downNumericUpDown.Size = new System.Drawing.Size(120, 22);
             this._downNumericUpDown.TabIndex = 5;
+            this._downNumericUpDown.ValueChanged += new System.EventHandler(this.NumericUpDownValueChanged);
             // 
             // _leftNumericUpDown
             // 
@@ -117,6 +119,7 @@
             this._leftNumericUpDown.Name = "_leftNumericUpDown";
             this._leftNumericUpDown.Size = new System.Drawing.Size(120, 22);
             this._leftNumericUpDown.TabIndex = 6;
+            this._leftNumericUpDown.ValueChanged += new System.EventHandler(this.NumericUpDownValueChanged);
             // 
             // _rightNumericUpDown
             // 
@@ -129,6 +132,7 @@
             this._rightNumericUpDown.Name = "_rightNumericUpDown";
             this._rightNumericUpDown.Size = new System.Drawing.Size(120, 22);
             this._rightNumericUpDown.TabIndex = 7;
+            this._rightNumericUpDown.ValueChanged += new System.EventHandler(this.NumericUpDownValueChanged);
             // 
             // NumericRectangleControl
             // 

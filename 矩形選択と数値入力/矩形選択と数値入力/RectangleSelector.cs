@@ -1,50 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace 矩形選択と数値入力
 {
-    public partial class RectangleSelector : Form
+    public partial class RectangleSelector : Form, ISubject
     {
+        private List<IObserver> _observers = new List<IObserver>();
         private bool _isDragging = false;
         private Point _startPoint;
-        NumericRectangleControl _numericRectangleControl;
+        NumericRectangleControl _numericRectangleControl = new NumericRectangleControl();
         private Rectangle _currentRectangle;
 
         public RectangleSelector()
         {
             InitializeComponent();
-            _numericRectangleControl = new NumericRectangleControl();
-            _numericRectangleControl.Show();
+            _observers.Add(_numericRectangleControl); //Observerに追加
+            _numericRectangleControl.Show(this); 
+            _numericRectangleControl.RectangleValueChanged += ValueChanged; //イベントハンドラを登録
         }
 
-        private void buttonClick(object sender, EventArgs e)
+        // 変更を通知
+        public void Notify(Rectangle rectangle)
         {
-            _numericRectangleControl._topNumericUpDown.Value = 0;
-            _numericRectangleControl._downNumericUpDown.Value = 0;
-            _numericRectangleControl._rightNumericUpDown.Value = 0;
-            _numericRectangleControl._leftNumericUpDown.Value = 0;
+            foreach (IObserver observer in _observers)
+            {
+                observer.Update(rectangle);
+            }
+        }
+        // NumericRectangleControl の値が変更されたとき
+        private void ValueChanged(object sender, EventArgs e)
+        {
+            _currentRectangle = _numericRectangleControl.GetRectangle();
+            _panel.Invalidate(); 
         }
 
         private void panelMouseDown(object sender, MouseEventArgs e)
         {
             _isDragging = true;
             _startPoint = e.Location;
-            _currentRectangle =  new Rectangle(e.X, e.Y,0,0);
+            _currentRectangle = new Rectangle(e.X, e.Y, 0, 0);
         }
 
         private void panelMouseMove(object sender, MouseEventArgs e)
         {
-            if(_isDragging)
+            if (_isDragging)
             {
-                _currentRectangle.Width = e.X - _startPoint.X;
-                _currentRectangle.Height = e.Y - _startPoint.Y;
+                _currentRectangle.X = Math.Min(e.X , _startPoint.X);
+                _currentRectangle.Y = Math.Min(e.Y , _startPoint.Y);
+                _currentRectangle.Width = Math.Abs(e.X - _startPoint.X);
+                _currentRectangle.Height = Math.Abs(e.Y - _startPoint.Y);
                 _panel.Invalidate();
             }
         }
@@ -52,22 +58,21 @@ namespace 矩形選択と数値入力
         private void panelMouseUp(object sender, MouseEventArgs e)
         {
             _isDragging = false;
-            UpdateNumericUpDownValue();
+            Notify(_currentRectangle);
         }
 
-        private void UpdateNumericUpDownValue()
+        private void buttonClick(object sender, EventArgs e)
         {
-            _numericRectangleControl._topNumericUpDown.Value = _currentRectangle.Top;
-            _numericRectangleControl._downNumericUpDown.Value = _currentRectangle.Bottom;
-            _numericRectangleControl._rightNumericUpDown.Value = _currentRectangle.Right;
-            _numericRectangleControl._leftNumericUpDown.Value = _currentRectangle.Left;
+            _currentRectangle = Rectangle.Empty;
+            _panel.Invalidate();
+            Notify(_currentRectangle);
         }
 
         private void panelPaint(object sender, PaintEventArgs e)
         {
-            if( _currentRectangle.Width > 0 && _currentRectangle.Height > 0 )
+            if (_currentRectangle.Width > 0 && _currentRectangle.Height > 0)
             {
-                e.Graphics.DrawRectangle(Pens.Black, _currentRectangle);
+                e.Graphics.FillRectangle(Brushes.Blue, _currentRectangle);
             }
         }
     }
