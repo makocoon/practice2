@@ -12,7 +12,7 @@ namespace 矩形選択と数値入力
 {
     public partial class NumericRectangleControl : Form,IObserver
     {
-        public event EventHandler RectangleValueChanged;
+        public event EventHandler RectangleValueChanged = delegate { };
         public NumericRectangleControl()
         {
             InitializeComponent();
@@ -27,7 +27,7 @@ namespace 矩形選択と数値入力
 
         internal void NumericUpDownValueChanged(object sender, EventArgs e)
         {
-            RectangleValueChanged?.Invoke(this, EventArgs.Empty);
+            RectangleValueChanged(this, EventArgs.Empty);
         }
         internal Rectangle GetRectangle()
         {
